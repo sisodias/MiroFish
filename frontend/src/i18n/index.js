@@ -5,6 +5,7 @@ const localeFiles = import.meta.glob('../../../locales/!(languages).json', { eag
 
 const messages = {}
 const availableLocales = []
+const defaultLocale = 'en'
 
 for (const path in localeFiles) {
   const key = path.match(/\/([^/]+)\.json$/)[1]
@@ -14,12 +15,15 @@ for (const path in localeFiles) {
   }
 }
 
-const savedLocale = localStorage.getItem('locale') || 'zh'
+const storedLocale = localStorage.getItem('locale')
+const savedLocale = availableLocales.some(({ key }) => key === storedLocale)
+  ? storedLocale
+  : defaultLocale
 
 const i18n = createI18n({
   legacy: false,
   locale: savedLocale,
-  fallbackLocale: 'zh',
+  fallbackLocale: defaultLocale,
   messages
 })
 
